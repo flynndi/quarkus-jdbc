@@ -1,0 +1,16 @@
+name: "jdbc"
+artifactId: "quarkus-jdbc"
+description: "Spring-style JDBC template APIs for Quarkus"
+metadata:
+  keywords:
+    - "jdbc"
+    - "sql"
+    - "template"
+    - "jdbctemplate"
+  categories:
+    - "data"
+  status: "preview"
+  scm-url: "https://github.com/flynndi/quarkus-jdbc"
+  config:
+    - "quarkus.jdbc."
+  minimum-java-version: "17"

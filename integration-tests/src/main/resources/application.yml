@@ -1,0 +1,46 @@
+quarkus:
+  datasource:
+    <default>:
+      db-kind: h2
+      jdbc:
+        url: "jdbc:h2:mem:quarkus-jdbc-test;DB_CLOSE_DELAY=-1;MODE=LEGACY"
+        max-size: 4
+      username: sa
+      password: sa
+    extra:
+      db-kind: h2
+      jdbc:
+        url: "jdbc:h2:mem:quarkus-jdbc-extra-test;DB_CLOSE_DELAY=-1;MODE=LEGACY"
+        max-size: 4
+      username: sa
+      password: sa
+    auto:
+      db-kind: h2
+      jdbc:
+        url: "jdbc:h2:mem:quarkus-jdbc-auto-test;DB_CLOSE_DELAY=-1;MODE=LEGACY"
+        max-size: 4
+      username: sa
+      password: sa
+  jdbc:
+    datasource:
+      <default>:
+        sql-init:
+          enabled: true
+          schema-locations:
+            - "classpath:h2-database.sql"
+          data-locations:
+            - "classpath:h2-noop.sql"
+          ignore-failed-drops: true
+      extra:
+        sql-init:
+          enabled: true
+          schema-locations:
+            - "classpath:h2-extra-database.sql"
+          data-locations:
+            - "classpath:h2-noop.sql"
+          ignore-failed-drops: true
+      auto:
+        sql-init:
+          enabled: true
+          platform: h2
+          ignore-failed-drops: true

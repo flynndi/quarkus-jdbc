@@ -1,0 +1,29 @@
+[versions]
+jspecify = "1.0.0"
+kotlin = "2.3.20"
+quarkus = "3.27.0"
+vanniktech-maven-publish = "0.36.0"
+
+[libraries]
+jboss-logging = { module = "org.jboss.logging:jboss-logging" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+quarkus-agroal = { module = "io.quarkus:quarkus-agroal" }
+quarkus-agroal-deployment = { module = "io.quarkus:quarkus-agroal-deployment" }
+quarkus-arc = { module = "io.quarkus:quarkus-arc" }
+quarkus-arc-deployment = { module = "io.quarkus:quarkus-arc-deployment" }
+quarkus-bom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
+quarkus-config-yaml = { module = "io.quarkus:quarkus-config-yaml" }
+quarkus-core-deployment = { module = "io.quarkus:quarkus-core-deployment" }
+quarkus-jdbc-h2 = { module = "io.quarkus:quarkus-jdbc-h2" }
+quarkus-junit5 = { module = "io.quarkus:quarkus-junit5" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+rest-assured = { module = "io.rest-assured:rest-assured" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-maven-publish" }
+quarkus-application = { id = "io.quarkus", version.ref = "quarkus" }
+quarkus-extension = { id = "io.quarkus.extension", version.ref = "quarkus" }
