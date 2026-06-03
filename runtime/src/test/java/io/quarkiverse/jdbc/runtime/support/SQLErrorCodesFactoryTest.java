@@ -18,7 +18,9 @@ package io.quarkiverse.jdbc.runtime.support;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -41,6 +43,47 @@ class SQLErrorCodesFactoryTest {
 
         assertArrayEquals(new String[] { "-803" }, db2.getDuplicateKeyCodes());
         assertArrayEquals(new String[] { "1062" }, mysql.getDuplicateKeyCodes());
+    }
+
+    @Test
+    void loadsDefaultSqlErrorCodesWhenContextClassLoaderCannotFindResource() throws Exception {
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        URLClassLoader emptyClassLoader = new URLClassLoader(new URL[0], null);
+
+        try {
+            currentThread.setContextClassLoader(emptyClassLoader);
+            SQLErrorCodesFactory factory = new SQLErrorCodesFactory();
+
+            SQLErrorCodes db2 = factory.getErrorCodes("DB2/LINUXX8664");
+
+            assertArrayEquals(new String[] { "-803" }, db2.getDuplicateKeyCodes());
+        }
+        finally {
+            currentThread.setContextClassLoader(originalClassLoader);
+            emptyClassLoader.close();
+        }
+    }
+
+    @Test
+    void detectsRootClasspathOverrideFromContextClassLoaderAtCallTime(@TempDir Path tempDir) throws Exception {
+        assertFalse(SQLErrorCodeSQLExceptionTranslator.hasUserProvidedErrorCodesFile());
+        Files.writeString(tempDir.resolve(SQLErrorCodesFactory.SQL_ERROR_CODE_OVERRIDE_PATH), "");
+
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        URLClassLoader overrideClassLoader = new URLClassLoader(new URL[] { tempDir.toUri().toURL() },
+                SQLErrorCodesFactory.class.getClassLoader());
+
+        try {
+            currentThread.setContextClassLoader(overrideClassLoader);
+
+            assertTrue(SQLErrorCodeSQLExceptionTranslator.hasUserProvidedErrorCodesFile());
+        }
+        finally {
+            currentThread.setContextClassLoader(originalClassLoader);
+            overrideClassLoader.close();
+        }
     }
 
     @Test

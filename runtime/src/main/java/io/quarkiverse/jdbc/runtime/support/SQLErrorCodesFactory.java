@@ -146,10 +146,12 @@ public class SQLErrorCodesFactory {
 
     private void loadErrorCodes(String path, boolean optional) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
+        InputStream resourceInputStream = classLoader != null ? classLoader.getResourceAsStream(path) : null;
+        if (resourceInputStream == null) {
             classLoader = SQLErrorCodesFactory.class.getClassLoader();
+            resourceInputStream = classLoader != null ? classLoader.getResourceAsStream(path) : ClassLoader.getSystemResourceAsStream(path);
         }
-        try (InputStream inputStream = classLoader.getResourceAsStream(path)) {
+        try (InputStream inputStream = resourceInputStream) {
             if (inputStream == null) {
                 if (!optional) {
                     logger.info("Default sql-error-codes.xml not found at " + path);

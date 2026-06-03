@@ -79,13 +79,15 @@ public class SQLErrorCodeSQLExceptionTranslator extends AbstractFallbackSQLExcep
 	private static final int MESSAGE_SQL_THROWABLE_CONSTRUCTOR = 4;
 	private static final int MESSAGE_SQL_SQLEX_CONSTRUCTOR = 5;
 
-	private static final boolean userProvidedErrorCodesFilePresent = hasResource(SQLErrorCodesFactory.SQL_ERROR_CODE_OVERRIDE_PATH);
-
 	private @Nullable Supplier<@Nullable SQLErrorCodes> sqlErrorCodes;
 
 
 	private static boolean hasResource(String path) {
-		ClassLoader classLoader = SQLErrorCodesFactory.class.getClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (classLoader != null && classLoader.getResource(path) != null) {
+			return true;
+		}
+		classLoader = SQLErrorCodesFactory.class.getClassLoader();
 		return (classLoader != null ? classLoader.getResource(path) : ClassLoader.getSystemResource(path)) != null;
 	}
 
@@ -423,7 +425,7 @@ public class SQLErrorCodeSQLExceptionTranslator extends AbstractFallbackSQLExcep
 	 * in the root of the classpath.
 	 */
 	static boolean hasUserProvidedErrorCodesFile() {
-		return userProvidedErrorCodesFilePresent;
+		return hasResource(SQLErrorCodesFactory.SQL_ERROR_CODE_OVERRIDE_PATH);
 	}
 
 }
