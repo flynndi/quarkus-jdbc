@@ -16,6 +16,14 @@
 
 package io.quarkiverse.jdbc.runtime.convert;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
@@ -69,6 +77,18 @@ public class DefaultConversionService implements ConversionService {
         if (UUID.class == targetType) {
             return String.class == sourceType;
         }
+        if (Timestamp.class == sourceType && LocalDateTime.class == targetType) {
+            return true;
+        }
+        if (Date.class == sourceType && LocalDate.class == targetType) {
+            return true;
+        }
+        if (Time.class == sourceType && LocalTime.class == targetType) {
+            return true;
+        }
+        if (Collection.class == targetType || List.class == targetType) {
+            return true;
+        }
         return false;
     }
 
@@ -107,6 +127,18 @@ public class DefaultConversionService implements ConversionService {
         }
         if (UUID.class == targetType && source instanceof String text) {
             return (T) UUID.fromString(text);
+        }
+        if (LocalDateTime.class == targetType && source instanceof Timestamp timestamp) {
+            return (T) timestamp.toLocalDateTime();
+        }
+        if (LocalDate.class == targetType && source instanceof Date date) {
+            return (T) date.toLocalDate();
+        }
+        if (LocalTime.class == targetType && source instanceof Time time) {
+            return (T) time.toLocalTime();
+        }
+        if (Collection.class == targetType || List.class == targetType) {
+            return (T) List.of(source);
         }
         throw new IllegalArgumentException("Value [" + source + "] of type [" + source.getClass().getName() +
                 "] cannot be converted to required type [" + targetType.getName() + "]");

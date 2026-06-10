@@ -1,14 +1,20 @@
 [versions]
+assertj = "3.27.7"
 jspecify = "1.0.0"
 kotlin = "2.3.20"
+mockito = "5.23.0"
+mockk = "1.14.5"
 quarkus = "3.27.0"
 vanniktech-maven-publish = "0.36.0"
 
 [libraries]
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jboss-logging = { module = "org.jboss.logging:jboss-logging" }
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 quarkus-agroal = { module = "io.quarkus:quarkus-agroal" }
 quarkus-agroal-deployment = { module = "io.quarkus:quarkus-agroal-deployment" }
 quarkus-arc = { module = "io.quarkus:quarkus-arc" }

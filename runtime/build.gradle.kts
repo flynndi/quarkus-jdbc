@@ -22,7 +22,12 @@ dependencies {
     compileOnly(libs.kotlin.stdlib)
 
     testImplementation(platform(libs.quarkus.bom))
+    testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlin.reflect)
+    testImplementation(libs.kotlin.stdlib)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockk)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
