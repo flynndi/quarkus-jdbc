@@ -169,10 +169,43 @@ public abstract class BeanUtils {
     public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-            return beanInfo.getPropertyDescriptors();
+            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+            PropertyDescriptor[] result = new PropertyDescriptor[pds.length];
+            for (int i = 0; i < pds.length; i++) {
+                result[i] = getMostSpecificPropertyDescriptor(clazz, pds[i]);
+            }
+            return result;
         }
         catch (IntrospectionException ex) {
             throw new IllegalStateException("Failed to introspect bean class: " + clazz.getName(), ex);
+        }
+    }
+
+    private static PropertyDescriptor getMostSpecificPropertyDescriptor(Class<?> clazz, PropertyDescriptor pd)
+            throws IntrospectionException {
+
+        Method readMethod = getMostSpecificMethod(pd.getReadMethod(), clazz);
+        Method writeMethod = getMostSpecificMethod(pd.getWriteMethod(), clazz);
+        if (readMethod == pd.getReadMethod() && writeMethod == pd.getWriteMethod()) {
+            return pd;
+        }
+        return new PropertyDescriptor(pd.getName(), readMethod, writeMethod);
+    }
+
+    private static @Nullable Method getMostSpecificMethod(@Nullable Method method, Class<?> targetClass) {
+        if (method == null || method.getDeclaringClass() == targetClass) {
+            return method;
+        }
+        try {
+            return targetClass.getMethod(method.getName(), method.getParameterTypes());
+        }
+        catch (NoSuchMethodException ex) {
+            try {
+                return targetClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+            }
+            catch (NoSuchMethodException ignored) {
+                return method;
+            }
         }
     }
 
