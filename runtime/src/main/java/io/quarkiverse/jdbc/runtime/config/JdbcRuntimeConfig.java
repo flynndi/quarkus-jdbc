@@ -34,21 +34,9 @@ import io.smallrye.config.WithName;
 @ConfigRoot(phase = ConfigPhase.RUN_TIME)
 public interface JdbcRuntimeConfig {
 
-    @WithDefaults
-    StatementCreatorConfig statement();
-
     @WithName("datasource")
     @WithDefaults
     Map<String, DataSourceRuntimeConfig> dataSources();
-
-    @ConfigGroup
-    interface StatementCreatorConfig {
-
-        /**
-         * Instructs JDBC parameter binding to skip ParameterMetaData.getParameterType.
-         */
-        Optional<Boolean> ignoreGetParameterType();
-    }
 
     @ConfigGroup
     interface DataSourceRuntimeConfig {
